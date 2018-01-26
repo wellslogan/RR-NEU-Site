@@ -3985,6 +3985,12 @@ react-dom@^16.2.0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
+react-geolocated@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-geolocated/-/react-geolocated-2.3.0.tgz#59d2247a98b6c5b32316adc943b77749672298ea"
+  dependencies:
+    prop-types "^15.5.8"
+
 react-popper@^0.7.2:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-0.7.5.tgz#71c25946f291db381231281f6b95729e8b801596"
