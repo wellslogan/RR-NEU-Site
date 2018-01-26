@@ -1,0 +1,1 @@
+web=npx webpack-dev-server --config webpack.prod.js
