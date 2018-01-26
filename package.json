@@ -9,7 +9,7 @@
     "build": "webpack --config webpack.prod.js",
     "start-old": "webpack-dev-server --open --config webpack.dev.js",
     "start": "echo hello",
-    "heroku-postinstall": "webpack -p --config ./webpack.prod.js --progress"
+    "postinstall": "webpack -p --config ./webpack.prod.js --progress"
   },
   "dependencies": {
     "awesome-typescript-loader": "^3.4.1",
