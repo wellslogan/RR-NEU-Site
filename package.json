@@ -17,9 +17,7 @@
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
     "react-transition-group": "^2.2.1",
-    "reactstrap": "^5.0.0-alpha.4"
-  },
-  "devDependencies": {
+    "reactstrap": "^5.0.0-alpha.4",
     "@types/react": "^16.0.35",
     "@types/react-dom": "^16.0.3",
     "@types/react-router-dom": "^4.2.3",
