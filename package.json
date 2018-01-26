@@ -6,8 +6,8 @@
   "author": "Logan Wells",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server --open"
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack-dev-server --open --config webpack.dev.js"
   },
   "dependencies": {
     "bootstrap": "^4.0.0",
@@ -34,8 +34,10 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
     "typescript": "^2.6.2",
+    "uglifyjs-webpack-plugin": "^1.1.6",
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.1"
+    "webpack-dev-server": "^2.11.1",
+    "webpack-merge": "^4.1.1"
   }
 }
