@@ -13,11 +13,11 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },
-  // devServer: {
-  //   contentBase: path.resolve(__dirname, 'dist'),
-  //   port: 8000,
-  //   historyApiFallback: true,
-  // },
+  devServer: {
+    contentBase: path.resolve(__dirname, 'dist'),
+    port: 8000,
+    historyApiFallback: true,
+  },
   // devtool: 'inline-source-map',
   module: {
     loaders: [
