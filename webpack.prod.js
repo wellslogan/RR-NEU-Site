@@ -10,7 +10,4 @@ module.exports = merge(common, {
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
   ],
-  devServer: {
-    port: process.env.PORT || 8080,
-  },
 });

@@ -1,37 +1,26 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsConfigPathsPlugin = require('awesome-typescript-loader')
+  .TsConfigPathsPlugin;
 
 module.exports = {
   entry: {
     main: './src/index.tsx',
   },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js',
-  },
-  watch: true,
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
-  },
-  devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    port: 8000,
-    historyApiFallback: true,
-  },
-  // devtool: 'inline-source-map',
+
   module: {
-    loaders: [
+    rules: [
       {
-        test: /.(ts|tsx)$/,
-        use: ['awesome-typescript-loader'],
-        exclude: [/node_modules/],
+        test: /\.(ts|tsx)$/,
+        use: 'awesome-typescript-loader',
+        exclude: /node_modules/,
       },
-      { test: /.html$/, use: 'raw-loader' },
-      { test: /\.json$/, use: 'json-loader' },
       {
-        test: /\.(s*)css$/,
+        test: /\.scss$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
+      { test: /\.json$/, use: 'json-loader' },
+      { test: /\.html$/, use: 'raw-loader' },
       {
         test: /\.woff(\?.+)?$/,
         use: 'url-loader?limit=10000&mimetype=application/font-woff',
@@ -47,11 +36,24 @@ module.exports = {
       { test: /\.gif$/, use: 'url-loader?mimetype=image/gif' },
     ],
   },
+
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    plugins: [
+      new TsConfigPathsPlugin({
+        configFileName: 'tsconfig.json',
+      }),
+    ],
+  },
+
   plugins: [
     new HtmlWebpackPlugin({
       template: './index.html',
-      showErrors: true,
-      hash: true,
     }),
   ],
+
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'index.js',
+  },
 };
