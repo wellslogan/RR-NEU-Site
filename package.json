@@ -7,8 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.prod.js",
-    "prod": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.prod.js"
+    "start": "webpack-dev-server --config webpack.dev.js"
   },
   "dependencies": {
     "bootstrap": "^4.0.0",
@@ -18,7 +17,9 @@
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
     "react-transition-group": "^2.2.1",
-    "reactstrap": "^5.0.0-alpha.4",
+    "reactstrap": "^5.0.0-alpha.4"
+  },
+  "devDependencies": {
     "@types/react": "^16.0.35",
     "@types/react-dom": "^16.0.3",
     "@types/react-router-dom": "^4.2.3",
