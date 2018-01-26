@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "start": "webpack-dev-server --config webpack.prod.js -p",
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.prod.js",
     "prod": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.prod.js"
   },
   "dependencies": {
