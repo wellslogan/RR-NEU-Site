@@ -9,7 +9,7 @@
     "build": "webpack --config webpack.prod.js",
     "start-old": "webpack-dev-server --open --config webpack.dev.js",
     "start": "echo start",
-    "postinstall": "node node_modules/webpack/bin/webpack.js -p --config ./webpack.prod.js --display-error-details"
+    "postinstall": "node node_modules/webpack/bin/webpack.js -p --config ./webpack.prod.js"
   },
   "dependencies": {
     "awesome-typescript-loader": "^3.4.1",
