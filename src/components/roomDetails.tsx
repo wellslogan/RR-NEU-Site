@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { MockRooms, MockReviews } from '@app/mockData';
+// import { MockRooms, MockReviews } from '@app/mockData';
 
 type RoomDetailsProps = {
   match: {
