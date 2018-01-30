@@ -1,30 +1,39 @@
 import * as React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { Container } from 'reactstrap';
+import { Container, Col, Row } from 'reactstrap';
+import { geolocated } from 'react-geolocated';
 
-import { SiteNav } from './components/nav';
-import { Home } from './components/home';
+import { SiteNav } from '@app/components/nav';
+import { Home } from '@app/components/home';
+import { Location } from '@app/components/location';
+import { RoomDetails } from '@app/components/roomDetails';
 
-const RoomsList: React.StatelessComponent = () => (
-  <ul>
-    <li>1</li>
-    <li>2</li>
-    <li>3</li>
-  </ul>
-);
-
-const App = () => (
+const App = props => (
   <BrowserRouter>
     <>
       <header>
         <SiteNav />
       </header>
       <Container>
-        <Route path="/" exact component={Home} />
-        <Route path="/rooms" component={RoomsList} />
+        <Row>
+          <Col sm="12">
+            <Location {...props} className="center-text" />
+          </Col>
+        </Row>
+        <Route
+          path="/"
+          exact
+          render={routeProps => <Home {...props} {...routeProps} />}
+        />
+        <Route path="/rooms/:id" component={RoomDetails} />
       </Container>
     </>
   </BrowserRouter>
 );
 
-export default App;
+export default geolocated({
+  positionOptions: {
+    enableHighAccuracy: false,
+  },
+  userDecisionTimeout: 5000,
+})(App);

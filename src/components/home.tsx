@@ -1,12 +1,80 @@
 import * as React from 'react';
-import { Row, Col } from 'reactstrap';
+import {
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  InputGroup,
+  InputGroupAddon,
+} from 'reactstrap';
+import { GeolocatedProps } from 'react-geolocated';
 
-const Home: React.StatelessComponent = () => (
-  <Row>
-    <Col sm="12" md={{ size: 8, offset: 2 }}>
-      <h1>Hello</h1>
-    </Col>
-  </Row>
-);
+import { Room } from '@app/models/room';
+import { MockRooms } from '@app/mockData';
+import { RoomList } from '@app/components/roomList';
+
+type HomeProps = {} & GeolocatedProps;
+
+type HomeState = {
+  location?: any;
+  query?: string;
+  rooms?: Room[];
+};
+
+class Home extends React.Component<HomeProps, HomeState> {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentWillReceiveProps(nextProps: HomeProps) {
+    if (nextProps.coords) {
+      this.setState({
+        // query: String(nextProps.coords.latitude),
+        rooms: MockRooms,
+      });
+    }
+  }
+
+  handleChange(text: string): void {
+    this.setState({
+      query: text,
+    });
+  }
+
+  render() {
+    return (
+      <>
+        <Row>
+          <Col sm="12" md={{ size: 8, offset: 2 }}>
+            <Form>
+              <FormGroup>
+                <InputGroup>
+                  <Input
+                    type="text"
+                    placeholder="Enter an address, city, or zip code"
+                    value={this.state.query}
+                    onChange={e => this.handleChange.call(this, e.target.value)}
+                  />
+                  <InputGroupAddon>
+                    <Button color="secondary">Search</Button>
+                  </InputGroupAddon>
+                </InputGroup>
+              </FormGroup>
+            </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm="12">
+            <RoomList rooms={this.state.rooms} />
+          </Col>
+        </Row>
+      </>
+    );
+  }
+}
 
 export { Home };

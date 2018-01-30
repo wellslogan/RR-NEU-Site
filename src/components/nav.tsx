@@ -20,11 +20,11 @@ export const SiteNav: React.StatelessComponent = () => (
             Home
           </Link>
         </NavItem>
-        <NavItem>
+        {/* <NavItem>
           <Link className="nav-link" to="/rooms">
             Rooms
           </Link>
-        </NavItem>
+        </NavItem> */}
       </Nav>
     </Collapse>
   </Navbar>
