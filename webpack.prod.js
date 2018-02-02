@@ -10,7 +10,7 @@ module.exports = merge(common, {
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new webpack.DefinePlugin({
-      'process.env.API_URI': process.env.API_URI,
+      'process.env.API_URI': JSON.stringify(process.env.API_URI),
     }),
   ],
 });
