@@ -7,6 +7,7 @@ import { SiteNav } from '@app/components/nav';
 import { Home } from '@app/components/home';
 import { Location } from '@app/components/location';
 import { RoomDetails } from '@app/components/roomDetails';
+import { AddRoom } from '@app/components/addRoom';
 
 const App = props => (
   <BrowserRouter>
@@ -25,7 +26,12 @@ const App = props => (
           exact
           render={routeProps => <Home {...props} {...routeProps} />}
         />
-        <Route path="/rooms/:id" component={RoomDetails} />
+        <Route path="/room" exact />
+        <Route path="/room/:id" component={RoomDetails} />
+        <Route
+          path="/add"
+          render={routeProps => <AddRoom {...props} {...routeProps} />}
+        />
       </Container>
     </>
   </BrowserRouter>

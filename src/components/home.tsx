@@ -15,6 +15,7 @@ import { GeolocatedProps } from 'react-geolocated';
 import { Room } from '@app/models/room';
 import { MockRooms } from '@app/mockData';
 import { RoomList } from '@app/components/roomList';
+import { ApiService } from '@app/services/apiService';
 
 type HomeProps = {} & GeolocatedProps;
 
@@ -32,9 +33,14 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   componentWillReceiveProps(nextProps: HomeProps) {
     if (nextProps.coords) {
-      this.setState({
-        // query: String(nextProps.coords.latitude),
-        rooms: MockRooms,
+      ApiService.get(
+        `/api/google/getLocationFromCoords?la=${nextProps.coords.latitude}&lo=${
+          nextProps.coords.longitude
+        }`
+      ).then(res => {
+        this.setState({
+          query: res.address,
+        });
       });
     }
   }
@@ -42,6 +48,14 @@ class Home extends React.Component<HomeProps, HomeState> {
   handleChange(text: string): void {
     this.setState({
       query: text,
+    });
+  }
+
+  search(): void {
+    ApiService.get('/api/restrooms').then(rooms => {
+      this.setState({
+        rooms,
+      });
     });
   }
 
@@ -60,7 +74,12 @@ class Home extends React.Component<HomeProps, HomeState> {
                     onChange={e => this.handleChange.call(this, e.target.value)}
                   />
                   <InputGroupAddon>
-                    <Button color="secondary">Search</Button>
+                    <Button
+                      color="secondary"
+                      onClick={e => this.search.call(this)}
+                    >
+                      Search
+                    </Button>
                   </InputGroupAddon>
                 </InputGroup>
               </FormGroup>

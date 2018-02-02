@@ -1,7 +1,7 @@
 export type Room = {
   id: number;
   description: string;
-  location: {
-    address: string;
-  };
+  latitude: string;
+  longitude: string;
+  createDate: string;
 };

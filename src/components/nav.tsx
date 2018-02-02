@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 
 export const SiteNav: React.StatelessComponent = () => (
   <Navbar color="faded" light expand="md">
-    <NavbarBrand href="/">Restroom Review</NavbarBrand>
+    <NavbarBrand href="/">NEU Restroom Review</NavbarBrand>
     <Collapse isOpen={true} navbar>
       <Nav className="ml-auto" navbar>
         <NavItem>
@@ -20,11 +20,11 @@ export const SiteNav: React.StatelessComponent = () => (
             Home
           </Link>
         </NavItem>
-        {/* <NavItem>
-          <Link className="nav-link" to="/rooms">
-            Rooms
+        <NavItem>
+          <Link className="nav-link" to="/add">
+            Add Room
           </Link>
-        </NavItem> */}
+        </NavItem>
       </Nav>
     </Collapse>
   </Navbar>

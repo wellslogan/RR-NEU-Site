@@ -17,7 +17,7 @@ type RoomListProps = {
 
 const RoomList: React.StatelessComponent<RoomListProps> = props => {
   if (!props.rooms) {
-    return <Loading />;
+    return null;
   }
 
   return (
@@ -27,9 +27,8 @@ const RoomList: React.StatelessComponent<RoomListProps> = props => {
         {props.rooms.map(r => (
           <ListGroupItem>
             <ListGroupItemHeading>
-              <Link to={'/rooms/' + r.id}>{r.description}</Link>
+              <Link to={'/room/' + r.id}>{r.description}</Link>
             </ListGroupItemHeading>
-            <ListGroupItemText>{r.location.address}</ListGroupItemText>
           </ListGroupItem>
         ))}
       </ListGroup>
