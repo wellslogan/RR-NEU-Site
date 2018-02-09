@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ApiService } from '@app/services/apiService';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 import { stopLoading, startLoading } from '@app/_shared/actions';
 
@@ -39,10 +40,16 @@ class AddRoomWithoutRouter extends React.Component<
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.dispatch(startLoading());
     this.setState({
       error: '',
     });
+    if (!this.state.recaptchaResponse || this.state.recaptchaResponse === '') {
+      this.setState({
+        error: 'You must fill out the recaptcha form',
+      });
+      return;
+    }
+    this.props.dispatch(startLoading());
     ApiService.post('/api/restrooms/add', {
       restroom: {
         description: this.state.description,
@@ -50,6 +57,7 @@ class AddRoomWithoutRouter extends React.Component<
         longitude: this.state.longitude,
         location: this.state.location,
       },
+      recaptchaResponse: this.state.recaptchaResponse,
     }).then(res => {
       this.props.dispatch(stopLoading());
       if (res.success) {
@@ -94,6 +102,20 @@ class AddRoomWithoutRouter extends React.Component<
               name="location"
               value={this.state.location}
               onChange={e => this.handleInputChange(e)}
+            />
+          </div>
+          <div className="form-row">
+            <ReCAPTCHA
+              ref="recaptcha"
+              sitekey="6LcBDEQUAAAAAIB2kbmEh7eChcdxB6jPu4MBYWBx"
+              onChange={val =>
+                this.handleInputChange({
+                  target: {
+                    name: 'recaptchaResponse',
+                    value: val,
+                  },
+                })
+              }
             />
           </div>
           <div className="form-row">

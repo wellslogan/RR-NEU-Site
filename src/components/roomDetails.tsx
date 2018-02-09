@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { meanBy, sortBy } from 'lodash';
 
 import { Room } from '@app/models/room';
@@ -54,12 +55,19 @@ class RoomDetails extends React.Component<
   };
 
   submitForm = () => {
+    if (
+      !this.state.addRoomForm.recaptchaResponse ||
+      this.state.addRoomForm.recaptchaResponse === ''
+    ) {
+      return;
+    }
     this.props.dispatch(Actions.startLoading());
     ApiService.post('/api/reviews/add', {
       review: {
         ...this.state.addRoomForm,
         restroomId: this.state.room.id,
       },
+      recaptchaResponse: this.state.addRoomForm.recaptchaResponse,
     }).then(res => {
       this.props.dispatch(Actions.stopLoading());
       if (res.success) {
@@ -169,6 +177,19 @@ const ReviewForm = ({
           name="description"
           value={formValues.description}
           onChange={e => handleChange(e)}
+        />
+      </div>
+      <div className="form-row">
+        <ReCAPTCHA
+          sitekey="6LcBDEQUAAAAAIB2kbmEh7eChcdxB6jPu4MBYWBx"
+          onChange={val =>
+            handleChange({
+              target: {
+                name: 'recaptchaResponse',
+                value: val,
+              },
+            })
+          }
         />
       </div>
       <div className="form-row">
