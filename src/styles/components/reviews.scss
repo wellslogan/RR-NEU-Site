@@ -1,0 +1,43 @@
+@import '../_variables.scss';
+.reviews-list {
+  border: 1px solid $blue;
+  border-radius: 20px;
+
+  .review {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 150px auto;
+    grid-gap: 10px;
+    padding: 20px;
+    border-bottom: 1px solid lightgray;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .review-rating {
+      font-size: 108px;
+      font-weight: 700;
+      align-self: center;
+      justify-self: center;
+      color: $purple;
+    }
+
+    .review-content {
+      h3,
+      h4 {
+        margin: 5px 0;
+      }
+    }
+  }
+}
+
+.add-review-link {
+  text-decoration: underline;
+  font-weight: 300;
+  cursor: pointer;
+
+  &:hover {
+    color: $purple;
+  }
+}

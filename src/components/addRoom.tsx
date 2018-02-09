@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { GeolocatedProps } from 'react-geolocated';
 import * as _ from 'lodash';
-import { Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
-import { ApiService } from '@app/services/apiService';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { ApiService } from '@app/services/apiService';
+
+import { stopLoading, startLoading } from '@app/_shared/actions';
 
 type AddRoomState = {
   description?: string;
   latitude?: string;
   longitude?: string;
+  location?: string;
+  recaptchaResponse?: string;
+  error?: string;
 };
 
 class AddRoomWithoutRouter extends React.Component<
@@ -17,30 +22,45 @@ class AddRoomWithoutRouter extends React.Component<
 > {
   constructor(props) {
     super(props);
+    this.props.dispatch(stopLoading());
     this.state = {
       latitude: _.get(props, 'coords.latitude', ''),
       longitude: _.get(props, 'coords.longitude', ''),
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleInputChange(event) {
+  handleInputChange = event => {
     const { name, value } = event.target;
 
     this.setState({
       [name]: value,
     });
-  }
+  };
 
-  handleSubmit(event) {
+  handleSubmit = event => {
     event.preventDefault();
-
-    ApiService.post('/api/restrooms/add', {
-      ...this.state,
-    }).then(res => {
-      this.props.location.push('/');
+    this.props.dispatch(startLoading());
+    this.setState({
+      error: '',
     });
-  }
+    ApiService.post('/api/restrooms/add', {
+      restroom: {
+        description: this.state.description,
+        latitude: this.state.latitude,
+        longitude: this.state.longitude,
+        location: this.state.location,
+      },
+    }).then(res => {
+      this.props.dispatch(stopLoading());
+      if (res.success) {
+        this.props.history.push('/');
+        return;
+      }
+      this.setState({
+        error: 'Something went wrong, please try again.',
+      });
+    });
+  };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.coords) {
@@ -53,48 +73,41 @@ class AddRoomWithoutRouter extends React.Component<
 
   render() {
     return (
-      <Row>
-        <Col sm="12">
-          <h2>Add a Restroom</h2>
-          <Form onSubmit={e => this.handleSubmit(e)}>
-            <FormGroup>
-              <Label for="description">Description*</Label>
-              <Input
-                value={this.state.description}
-                onChange={e => this.handleInputChange.call(this, e)}
-                type="text"
-                name="description"
-                id="description"
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="latitude">Latitude*</Label>
-              <Input
-                value={this.state.latitude}
-                onChange={e => this.handleInputChange.call(this, e)}
-                type="text"
-                name="latitude"
-                id="latitude"
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="longitude">Longitude*</Label>
-              <Input
-                value={this.state.longitude}
-                onChange={e => this.handleInputChange.call(this, e)}
-                type="text"
-                name="longitude"
-                id="longitude"
-              />
-            </FormGroup>
-            <Button>Submit</Button>
-          </Form>
-        </Col>
-      </Row>
+      <section>
+        <h1>Add a new Restroom</h1>
+        <form onSubmit={e => this.handleSubmit(e)}>
+          <div className="form-row">
+            <label>Restroom Description</label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              value={this.state.description}
+              onChange={e => this.handleInputChange(e)}
+            />
+          </div>
+          <div className="form-row">
+            <label>Location</label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={this.state.location}
+              onChange={e => this.handleInputChange(e)}
+            />
+          </div>
+          <div className="form-row">
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+        {this.state.error && this.state.error !== '' ? (
+          <span className="error">{this.state.error}</span>
+        ) : null}
+      </section>
     );
   }
 }
 
-const AddRoom = withRouter(AddRoomWithoutRouter);
+const AddRoom = withRouter(connect()(AddRoomWithoutRouter));
 
 export { AddRoom };

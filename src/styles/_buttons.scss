@@ -1,0 +1,20 @@
+@import '_variables.scss';
+
+button {
+  @extend %appearance-none;
+  outline: none;
+  padding: 8px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid $purple;
+  color: $purple;
+  background-color: white;
+  font-weight: 300;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $purple;
+    color: white;
+    transition: background-color 0.15s linear;
+  }
+}

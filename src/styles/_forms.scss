@@ -1,0 +1,14 @@
+form {
+  .form-row {
+    padding: 10px 0;
+    label {
+      display: block;
+      padding-bottom: 5px;
+    }
+    input,
+    textarea {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+}

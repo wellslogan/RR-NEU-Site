@@ -1,21 +1,13 @@
 import * as React from 'react';
-import {
-  Row,
-  Col,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-  InputGroup,
-  InputGroupAddon,
-} from 'reactstrap';
 import { GeolocatedProps } from 'react-geolocated';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { Room } from '@app/models/room';
 import { MockRooms } from '@app/mockData';
 import { RoomList } from '@app/components/roomList';
 import { ApiService } from '@app/services/apiService';
+import * as Actions from '@app/_shared/actions';
 
 type HomeProps = {} & GeolocatedProps;
 
@@ -25,10 +17,26 @@ type HomeState = {
   rooms?: Room[];
 };
 
-class Home extends React.Component<HomeProps, HomeState> {
+const rooms = [
+  { description: '4th Floor Snell Library', id: 0 },
+  { description: '3rd Floor Snell Library', id: 0 },
+  { description: '4th Floor Snell Library', id: 0 },
+  { description: '4th Floor Snell Library', id: 0 },
+];
+
+class Home extends React.Component<HomeProps & any, HomeState> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      rooms: [],
+    };
+    this.props.dispatch(Actions.startLoading());
+    ApiService.get('/api/restrooms').then(rooms => {
+      this.props.dispatch(Actions.stopLoading());
+      this.setState({
+        rooms,
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps: HomeProps) {
@@ -61,39 +69,41 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   render() {
     return (
-      <>
-        <Row>
-          <Col sm="12" md={{ size: 8, offset: 2 }}>
-            <Form>
-              <FormGroup>
-                <InputGroup>
-                  <Input
-                    type="text"
-                    placeholder="Enter an address, city, or zip code"
-                    value={this.state.query}
-                    onChange={e => this.handleChange.call(this, e.target.value)}
-                  />
-                  <InputGroupAddon>
-                    <Button
-                      color="secondary"
-                      onClick={e => this.search.call(this)}
-                    >
-                      Search
-                    </Button>
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormGroup>
-            </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="12">
-            <RoomList rooms={this.state.rooms} />
-          </Col>
-        </Row>
-      </>
+      <section>
+        <div className="homepage">
+          <h1>Top Rated Near You</h1>
+          <div className="top-rated">
+            {this.state.rooms.slice(0, 4).map((r, idx) => (
+              <RoomBox
+                key={idx}
+                description={r.description}
+                handleClick={() => {
+                  this.props.history.push('/room/' + r.id);
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
     );
   }
 }
 
-export { Home };
+const RoomBox = props => {
+  return (
+    <div className="room" onClick={() => props.handleClick()}>
+      <span>{props.description}</span>
+    </div>
+  );
+};
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    loading: state.loading,
+    location: state.location,
+  };
+};
+
+const HomeWithRouter = withRouter(connect(mapStateToProps)(Home));
+
+export { HomeWithRouter as Home };

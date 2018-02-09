@@ -1,0 +1,25 @@
+@import '_mixins.scss';
+@import '_variables.scss';
+
+input,
+textarea {
+  @extend %appearance-none;
+  @include placeholder {
+    font-style: italic;
+    // color: lightgray;
+  }
+
+  outline: none;
+  box-shadow: none;
+  border: none;
+  padding: 8px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid $purple;
+  color: $purple;
+  // transition: border 0.15s linear;
+
+  &:focus {
+    // border-color: black;
+  }
+}
