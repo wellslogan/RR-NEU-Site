@@ -5,7 +5,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { meanBy, sortBy } from 'lodash';
 
 import { Room } from '@app/models/room';
-import { ApiService } from '@app/services/apiService';
+import { get, post } from '@app/_shared//baseService';
 import { Loading } from '@app/components/loading';
 import * as Actions from '@app/_shared/actions';
 import { ReviewsList } from '@app/components/reviewsList';
@@ -41,17 +41,15 @@ class RoomDetails extends React.Component<
 
   loadRoom = () => {
     this.props.dispatch(Actions.startLoading());
-    ApiService.get('/api/restrooms/' + this.props.match.params.id).then(
-      room => {
-        this.props.dispatch(Actions.stopLoading());
-        this.setState((state, props) => {
-          props.dispatch(Actions.stopLoading());
-          return {
-            room,
-          };
-        });
-      }
-    );
+    get<any>('/api/restrooms/' + this.props.match.params.id).then(room => {
+      this.props.dispatch(Actions.stopLoading());
+      this.setState((state, props) => {
+        props.dispatch(Actions.stopLoading());
+        return {
+          room,
+        };
+      });
+    });
   };
 
   submitForm = () => {
@@ -62,7 +60,7 @@ class RoomDetails extends React.Component<
       return;
     }
     this.props.dispatch(Actions.startLoading());
-    ApiService.post('/api/reviews/add', {
+    post<any>('/api/reviews/add', {
       review: {
         ...this.state.addRoomForm,
         restroomId: this.state.room.id,
@@ -100,10 +98,15 @@ class RoomDetails extends React.Component<
               this.submitForm();
             }}
             handleChange={e => {
+              const value =
+                e.target.type === 'checkbox'
+                  ? e.target.checked
+                  : e.target.value;
+
               this.setState({
                 addRoomForm: {
                   ...this.state.addRoomForm,
-                  [e.target.name]: e.target.value,
+                  [e.target.name]: value,
                 },
               });
             }}
@@ -153,11 +156,11 @@ const ReviewForm = ({
         />
       </div>
       <div className="form-row">
-        <label>Author</label>
+        <label>Post Anonymously</label>
         <input
-          type="text"
-          name="author"
-          value={formValues.author}
+          type="checkbox"
+          name="authorIsAnonymous"
+          value={formValues.authorIsAnonymous}
           onChange={e => handleChange(e)}
         />
       </div>

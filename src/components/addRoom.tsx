@@ -3,7 +3,7 @@ import { GeolocatedProps } from 'react-geolocated';
 import * as _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { ApiService } from '@app/services/apiService';
+import { get, post } from '@app/_shared//baseService';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 import { stopLoading, startLoading } from '@app/_shared/actions';
@@ -50,7 +50,7 @@ class AddRoomWithoutRouter extends React.Component<
       return;
     }
     this.props.dispatch(startLoading());
-    ApiService.post('/api/restrooms/add', {
+    post<any>('/api/restrooms/add', {
       restroom: {
         description: this.state.description,
         latitude: this.state.latitude,

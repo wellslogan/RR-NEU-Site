@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { addSearchQuery } from '@app/_shared/actions';
+import { get } from 'lodash';
 
 class SiteNav extends React.Component<any, any> {
   constructor(props) {
@@ -46,12 +47,26 @@ class SiteNav extends React.Component<any, any> {
           </form>
         </div>
         <div className="action-bar">
-          <Link to="/add" className="action-bar-item">
-            Add a Restroom
-          </Link>
-          <Link to="/login" className="action-bar-item">
-            Login
-          </Link>
+          {this.props.session ? (
+            <>
+              <Link to="/add" className="action-bar-item">
+                Add a Restroom
+              </Link>
+              <Link to="/profile" className="action-bar-item">
+                {this.props.session.name.slice(
+                  0,
+                  this.props.session.name.indexOf(' ')
+                )}
+              </Link>
+              <Link to="/login" className="action-bar-item">
+                Logout
+              </Link>
+            </>
+          ) : (
+            <Link to="/login" className="action-bar-item">
+              Login
+            </Link>
+          )}
         </div>
       </header>
     );
@@ -61,6 +76,7 @@ class SiteNav extends React.Component<any, any> {
 const mapStateToProps = (state, ownProps) => {
   return {
     query: state.query,
+    session: state.session,
   };
 };
 

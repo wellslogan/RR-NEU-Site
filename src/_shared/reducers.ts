@@ -5,6 +5,7 @@ export type AppState = {
   rooms: any[];
   location: any;
   query: string;
+  session: any;
 };
 
 const initialState = {
@@ -20,6 +21,8 @@ export const appReducer = (state = initialState, action) => {
     [ActionTypes.STOP_LOADING]: { ...state, loading: false },
     [ActionTypes.ADD_LOCATION]: { ...state, location: action.location },
     [ActionTypes.ADD_SEARCH_QUERY]: { ...state, query: action.query },
+    [ActionTypes.ADD_SESSION]: { ...state, session: action.session },
+    [ActionTypes.CLEAR_SESSION]: { ...state, session: undefined },
   };
 
   return actionMap[action.type] || state;

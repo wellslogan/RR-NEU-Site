@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import { Room } from '@app/models/room';
 import { MockRooms } from '@app/mockData';
 import { RoomList } from '@app/components/roomList';
-import { ApiService } from '@app/services/apiService';
+import { get } from '@app/_shared//baseService';
 import * as Actions from '@app/_shared/actions';
 
 type HomeProps = {} & GeolocatedProps;
@@ -31,7 +31,7 @@ class Home extends React.Component<HomeProps & any, HomeState> {
       rooms: [],
     };
     this.props.dispatch(Actions.startLoading());
-    ApiService.get('/api/restrooms').then(rooms => {
+    get<any>('/api/restrooms').then(rooms => {
       this.props.dispatch(Actions.stopLoading());
       this.setState({
         rooms,
@@ -41,7 +41,7 @@ class Home extends React.Component<HomeProps & any, HomeState> {
 
   componentWillReceiveProps(nextProps: HomeProps) {
     if (nextProps.coords) {
-      ApiService.get(
+      get<any>(
         `/api/google/getLocationFromCoords?la=${nextProps.coords.latitude}&lo=${
           nextProps.coords.longitude
         }`
@@ -60,7 +60,7 @@ class Home extends React.Component<HomeProps & any, HomeState> {
   }
 
   search(): void {
-    ApiService.get('/api/restrooms').then(rooms => {
+    get<any>('/api/restrooms').then(rooms => {
       this.setState({
         rooms,
       });
