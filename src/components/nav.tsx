@@ -2,14 +2,19 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { addSearchQuery } from '@app/_shared/actions';
 import { get } from 'lodash';
+import Icon from 'react-icons-kit';
+import { navicon } from 'react-icons-kit/fa/navicon';
+import { close as closeIcon } from 'react-icons-kit/fa/close';
+
+import { addSearchQuery } from '@shared/actions';
 
 class SiteNav extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
       state: props.state,
+      menuVisible: false,
     };
   }
 
@@ -19,11 +24,20 @@ class SiteNav extends React.Component<any, any> {
     });
   };
 
+  toggleMobileMenu = () => {
+    this.setState(state => ({
+      menuVisible: !state.menuVisible,
+    }));
+  };
+
   render() {
     return (
       <header>
         <div className="logo">
           <Link to="/">NEU Restroom Review</Link>
+        </div>
+        <div className="logo-mobile">
+          <Link to="/">RR</Link>
         </div>
         <div className="search">
           <form
@@ -67,6 +81,46 @@ class SiteNav extends React.Component<any, any> {
               Login
             </Link>
           )}
+        </div>
+        <div className="action-bar mobile">
+          <button type="button" onClick={() => this.toggleMobileMenu()}>
+            {this.state.menuVisible ? (
+              <Icon icon={closeIcon} />
+            ) : (
+              <Icon icon={navicon} />
+            )}
+          </button>
+        </div>
+        <div
+          className={`mobile-menu ${this.state.menuVisible ? 'visible' : ''}`}
+        >
+          <ul>
+            {this.props.session ? (
+              <>
+                <li>
+                  <Link to="/add" onClick={() => this.toggleMobileMenu()}>
+                    Add Restroom
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/profile" onClick={() => this.toggleMobileMenu()}>
+                    Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/login" onClick={() => this.toggleMobileMenu()}>
+                    Logout
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <li>
+                <Link to="/login" onClick={() => this.toggleMobileMenu()}>
+                  Login
+                </Link>
+              </li>
+            )}
+          </ul>
         </div>
       </header>
     );

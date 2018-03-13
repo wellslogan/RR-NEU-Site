@@ -1,17 +1,27 @@
 .homepage {
   .top-rated {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
+
+    @include tablet {
+      display: inline-flex;
+      flex-direction: row;
+    }
     width: 100%;
 
     .room {
       display: flex;
       flex-direction: column;
       background-color: $purple;
-      width: 25%;
-      height: 400px;
+      width: 100%;
       margin: 10px;
       cursor: pointer;
       padding: 20px;
+
+      @include tablet {
+        width: 25%;
+        height: 400px;
+      }
 
       span {
         display: block;
