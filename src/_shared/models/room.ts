@@ -1,4 +1,4 @@
-import { Review } from '@app/models/review';
+import { Review } from './review';
 
 export type Room = {
   id: number;
@@ -8,4 +8,5 @@ export type Room = {
   location: string;
   createDate: string;
   reviews: Review[];
+  averageRating?: number;
 };

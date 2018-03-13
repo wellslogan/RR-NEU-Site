@@ -7,7 +7,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-import { Room } from '@app/models/room';
+import { Room } from '@models';
 import { Loading } from '@app/components/loading';
 import { RouteComponentProps } from 'react-router';
 

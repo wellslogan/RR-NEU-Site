@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { stopLoading, startLoading } from '@app/_shared/actions';
-import { ApiService } from '@app/services/apiService';
+import { get } from '@shared/baseService';
 import { Link } from 'react-router-dom';
 
 class SearchResults extends React.Component<any, any> {
@@ -25,7 +25,7 @@ class SearchResults extends React.Component<any, any> {
 
   search = query => {
     this.props.dispatch(startLoading());
-    ApiService.get('/api/restrooms/search?q=' + query).then(res => {
+    get('/api/restrooms/search?q=' + query).then(res => {
       this.props.dispatch(stopLoading());
       this.setState({
         rooms: res,

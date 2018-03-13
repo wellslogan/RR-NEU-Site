@@ -1,11 +1,25 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { GoogleLogin } from 'react-google-login';
-import { addSession, clearSession } from '@app/_shared/actions';
 import { withRouter } from 'react-router-dom';
+import { parse } from 'query-string';
+
+import { addSession, clearSession } from '@app/_shared/actions';
 import { get } from '@app/_shared/baseService';
 
 const Login: React.StatelessComponent<any> = props => {
+  let loginAgain = false;
+  // if we have the 'again' queryparam, need to clear session and login again
+  if (parse(location.search).again) {
+    loginAgain = true;
+
+    sessionStorage.removeItem('jwtToken');
+    if (props.session) {
+      props.clearSession(); // will trigger prop change, but just in case:
+      return null;
+    }
+  }
+
   const responseGoogle = googleUser => {
     const id_token = googleUser.getAuthResponse().id_token;
 
@@ -73,7 +87,7 @@ const Login: React.StatelessComponent<any> = props => {
 
   return (
     <section>
-      <h1>Please Login</h1>
+      <h1>Please Login {loginAgain ? 'Again' : ''}</h1>
       <GoogleLogin
         className="google-button"
         clientId="1084340095005-ruohgqsnnujh6ics2co0jjc2l2k7ukvd.apps.googleusercontent.com"

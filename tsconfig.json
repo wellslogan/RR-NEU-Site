@@ -2,18 +2,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@app": [
-        "src"
-      ],
-      "@app/*": [
-        "src/*"
-      ],
-      "@styles": [
-        "src/styles"
-      ],
-      "@styles/*": [
-        "src/styles/*"
-      ]
+      "@models": ["src/_shared/models"],
+      "@models/*": ["src/_shared/models/*"],
+      "@shared": ["src/_shared"],
+      "@shared/*": ["src/_shared/*"],
+      "@app/*": ["src/*"]
     },
     "sourceMap": true,
     "module": "commonjs",

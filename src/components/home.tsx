@@ -2,12 +2,12 @@ import * as React from 'react';
 import { GeolocatedProps } from 'react-geolocated';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { orderBy } from 'lodash';
 
-import { Room } from '@app/models/room';
-import { MockRooms } from '@app/mockData';
+import { Room } from '@models';
 import { RoomList } from '@app/components/roomList';
-import { get } from '@app/_shared//baseService';
-import * as Actions from '@app/_shared/actions';
+import { get } from '@shared/baseService';
+import * as Actions from '@shared/actions';
 
 type HomeProps = {} & GeolocatedProps;
 
@@ -16,13 +16,6 @@ type HomeState = {
   query?: string;
   rooms?: Room[];
 };
-
-const rooms = [
-  { description: '4th Floor Snell Library', id: 0 },
-  { description: '3rd Floor Snell Library', id: 0 },
-  { description: '4th Floor Snell Library', id: 0 },
-  { description: '4th Floor Snell Library', id: 0 },
-];
 
 class Home extends React.Component<HomeProps & any, HomeState> {
   constructor(props) {
@@ -39,19 +32,19 @@ class Home extends React.Component<HomeProps & any, HomeState> {
     });
   }
 
-  componentWillReceiveProps(nextProps: HomeProps) {
-    if (nextProps.coords) {
-      get<any>(
-        `/api/google/getLocationFromCoords?la=${nextProps.coords.latitude}&lo=${
-          nextProps.coords.longitude
-        }`
-      ).then(res => {
-        this.setState({
-          query: res.address,
-        });
-      });
-    }
-  }
+  // componentWillReceiveProps(nextProps: HomeProps) {
+  //   if (nextProps.coords) {
+  //     get<any>(
+  //       `/api/google/getLocationFromCoords?la=${nextProps.coords.latitude}&lo=${
+  //         nextProps.coords.longitude
+  //       }`
+  //     ).then(res => {
+  //       this.setState({
+  //         query: res.address,
+  //       });
+  //     });
+  //   }
+  // }
 
   handleChange(text: string): void {
     this.setState({
@@ -71,17 +64,37 @@ class Home extends React.Component<HomeProps & any, HomeState> {
     return (
       <section>
         <div className="homepage">
-          <h1>Top Rated Near You</h1>
+          <h1>Top Rated</h1>
           <div className="top-rated">
-            {this.state.rooms.slice(0, 4).map((r, idx) => (
-              <RoomBox
-                key={idx}
-                description={r.description}
-                handleClick={() => {
-                  this.props.history.push('/room/' + r.id);
-                }}
-              />
-            ))}
+            {orderBy(
+              this.state.rooms,
+              [room => (room.averageRating == null ? -1 : room.averageRating)],
+              ['desc']
+            )
+              .slice(0, 4)
+              .map((r, idx) => (
+                <RoomBox
+                  key={idx}
+                  room={r}
+                  handleClick={() => {
+                    this.props.history.push('/room/' + r.id);
+                  }}
+                />
+              ))}
+          </div>
+          <h1>Recently Added</h1>
+          <div className="top-rated">
+            {orderBy(this.state.rooms, ['createDate'], ['desc'])
+              .slice(0, 4)
+              .map((r, idx) => (
+                <RoomBox
+                  key={idx}
+                  room={r}
+                  handleClick={() => {
+                    this.props.history.push(`/room/${r.id}`);
+                  }}
+                />
+              ))}
           </div>
         </div>
       </section>
@@ -89,10 +102,17 @@ class Home extends React.Component<HomeProps & any, HomeState> {
   }
 }
 
-const RoomBox = props => {
+const RoomBox = ({ room, ...props }) => {
   return (
     <div className="room" onClick={() => props.handleClick()}>
-      <span>{props.description}</span>
+      <span className="description">{room.description}</span>
+      <span className="averageRating">
+        {room.averageRating == null ? (
+          <small>No reviews</small>
+        ) : (
+          `${room.averageRating}/10`
+        )}
+      </span>
     </div>
   );
 };

@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import * as moment from 'moment';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { meanBy, sortBy } from 'lodash';
-
-import { Room } from '@app/models/room';
-import { get, post } from '@app/_shared//baseService';
+import { get, post } from '@shared/baseService';
+import { Room } from '@models';
 import { Loading } from '@app/components/loading';
-import * as Actions from '@app/_shared/actions';
-import { ReviewsList } from '@app/components/reviewsList';
+import * as Actions from '@shared/actions';
+import { ReviewsList } from '../reviewsList';
+import { RatingComponent } from '@app/components/rating';
 
 type RoomDetailsProps = {
   match: {
@@ -166,12 +166,14 @@ const ReviewForm = ({
       </div>
       <div className="form-row">
         <label>Rating</label>
-        <input
-          type="number"
-          name="rating"
-          value={formValues.rating}
-          onChange={e => handleChange(e)}
-        />
+        <RatingComponent rating={formValues.rating} handleClick={(num) => {
+          handleChange({
+            target: {
+              name: 'rating',
+              value: num
+            }
+          });
+        }}/>
       </div>
       <div className="form-row">
         <label>Description</label>

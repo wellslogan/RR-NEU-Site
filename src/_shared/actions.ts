@@ -1,9 +1,11 @@
 import { Session } from '@app/_shared/models/session';
+import { addRoom } from '@app/components/restrooms/room.service';
 
 export const ActionTypes = {
   START_LOADING: 'START_LOADING',
   STOP_LOADING: 'STOP_LOADING',
   ADD_LOCATION: 'ADD_LOCATION',
+  ADD_LOCATION_ENABLED: 'ADD_LOCATION_ENABLED',
   ADD_SEARCH_QUERY: 'ADD_SEARCH_QUERY',
   ADD_SESSION: 'ADD_SESSION',
   CLEAR_SESSION: 'CLEAR_SESSION',
@@ -17,9 +19,18 @@ export const stopLoading = () => ({
   type: ActionTypes.STOP_LOADING,
 });
 
-export const addLocation = (location: { latitude; longitude }) => ({
+export const addLocation = (location: {
+  formated_address;
+  latitude;
+  longitude;
+}) => ({
   type: ActionTypes.ADD_LOCATION,
   location: location,
+});
+
+export const addLocationEnabled = (enabled: boolean) => ({
+  type: ActionTypes.ADD_LOCATION_ENABLED,
+  enabled,
 });
 
 export const addSearchQuery = (query: string) => ({
