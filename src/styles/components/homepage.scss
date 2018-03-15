@@ -14,13 +14,14 @@
       flex-direction: column;
       background-color: $purple;
       width: 100%;
-      margin: 10px;
+      margin: 10px 0;
       cursor: pointer;
       padding: 20px;
 
       @include tablet {
         width: 25%;
         height: 400px;
+        margin: 10px;
       }
 
       span {
