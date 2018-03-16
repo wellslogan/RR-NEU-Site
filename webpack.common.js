@@ -34,6 +34,7 @@ module.exports = {
       { test: /\.svg(\?.+)?$/, use: 'file-loader' },
       { test: /\.png$/, use: 'url-loader?mimetype=image/png' },
       { test: /\.gif$/, use: 'url-loader?mimetype=image/gif' },
+      { test: /\.ico$/, use: 'file-loader?name=[name].[ext]' },
     ],
   },
 
