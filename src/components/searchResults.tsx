@@ -8,7 +8,7 @@ class SearchResults extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {};
-    if (props.query && props.query !== '') {
+    if (props.query && props.query.trim() !== '') {
       this.search(props.query);
     }
   }
@@ -16,7 +16,7 @@ class SearchResults extends React.Component<any, any> {
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.query &&
-      nextProps.query !== '' &&
+      nextProps.query.trim() !== '' &&
       nextProps.query !== this.props.query
     ) {
       this.search(nextProps.query);
