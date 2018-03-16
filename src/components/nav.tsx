@@ -34,10 +34,10 @@ class SiteNav extends React.Component<any, any> {
     return (
       <header>
         <div className="logo">
-          <Link to="/">NEU Restroom Review</Link>
+          <Link to="/">Husky Bathrooms</Link>
         </div>
         <div className="logo-mobile">
-          <Link to="/">RR</Link>
+          <Link to="/">HB</Link>
         </div>
         <div className="search">
           <form

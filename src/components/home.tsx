@@ -32,20 +32,6 @@ class Home extends React.Component<HomeProps & any, HomeState> {
     });
   }
 
-  // componentWillReceiveProps(nextProps: HomeProps) {
-  //   if (nextProps.coords) {
-  //     get<any>(
-  //       `/api/google/getLocationFromCoords?la=${nextProps.coords.latitude}&lo=${
-  //         nextProps.coords.longitude
-  //       }`
-  //     ).then(res => {
-  //       this.setState({
-  //         query: res.address,
-  //       });
-  //     });
-  //   }
-  // }
-
   handleChange(text: string): void {
     this.setState({
       query: text,
@@ -110,7 +96,9 @@ const RoomBox = ({ room, ...props }) => {
         {room.averageRating == null ? (
           <small>No reviews</small>
         ) : (
-          `${room.averageRating}/10`
+          `${room.averageRating}/10 ${
+            room.reviews ? `(${room.reviews.length})` : ''
+          }`
         )}
       </span>
     </div>
