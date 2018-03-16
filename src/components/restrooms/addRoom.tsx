@@ -3,12 +3,19 @@ import { GeolocatedProps } from 'react-geolocated';
 import * as _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Icon from 'react-icons-kit';
+import { man } from 'react-icons-kit/icomoon/man';
+import { woman } from 'react-icons-kit/icomoon/woman';
+import { manWoman } from 'react-icons-kit/icomoon/manWoman';
+import { questionCircle } from 'react-icons-kit/fa/questionCircle';
+
 import { addRoom } from './room.service';
 import ReCAPTCHA from 'react-google-recaptcha';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { geocodeByAddress } from 'react-places-autocomplete';
 
 import { stopLoading, startLoading, addLocation } from '@shared/actions';
+import { RestroomGender } from '@models';
 
 type AddRoomProps = {
   startLoading: () => void;
@@ -26,6 +33,7 @@ type AddRoomState = {
   recaptchaResponse?: string;
   error?: string;
   useCurrentLocation?: boolean;
+  restroomGender?: RestroomGender;
 };
 
 class AddRoomWithoutRouter extends React.Component<
@@ -105,7 +113,7 @@ class AddRoomWithoutRouter extends React.Component<
 
     if (!this.state.description || !this.state.location) {
       return this.setState({
-        error: 'Both fields are required!',
+        error: '* denotes required fields.',
       });
     }
 
@@ -117,6 +125,7 @@ class AddRoomWithoutRouter extends React.Component<
           latitude: lat,
           longitude: lng,
           location: this.state.location,
+          restroomGender: this.state.restroomGender
         },
         recaptchaResponse: this.state.recaptchaResponse,
       })
@@ -159,9 +168,20 @@ class AddRoomWithoutRouter extends React.Component<
         lng: this.props.storedLocation.longitude,
       })
     }
-
-    
   };
+
+  setGender = (gender: RestroomGender) => {
+    this.setState(prevState => {
+      if (prevState.restroomGender === gender) {
+        return {
+          restroomGender: undefined
+        };
+      }
+      return {
+        restroomGender: gender
+      }
+    });
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.coords) {
@@ -186,6 +206,14 @@ class AddRoomWithoutRouter extends React.Component<
               value={this.state.description}
               onChange={e => this.handleInputChange(e)}
             />
+          </div>
+          <div className="form-row">
+            <label>Restroom Gender</label>
+            <div className="set-restroom-gender">
+              <Icon className={this.state.restroomGender === RestroomGender.MALE ? 'male active' : 'male'} icon={man} size={54} onClick={() => this.setGender(RestroomGender.MALE)}/>
+              <Icon className={this.state.restroomGender === RestroomGender.FEMALE ? 'female active' : 'female'} icon={woman} size={54} onClick={() => this.setGender(RestroomGender.FEMALE)}/>
+              <Icon className={this.state.restroomGender === RestroomGender.ALLGENDER ? 'allgender active' : 'allgender'} icon={manWoman} size={54} onClick={() => this.setGender(RestroomGender.ALLGENDER)}/>
+            </div>
           </div>
           <div className="form-row">
             <label>Location*</label>

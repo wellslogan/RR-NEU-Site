@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import * as moment from 'moment';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { meanBy, sortBy } from 'lodash';
-import { get, post } from '@shared/baseService';
+import { get, post  } from '@shared/baseService';
+import { startLoading, stopLoading } from '@shared/actions';
+import { deleteReview } from './room.service';
 import { Room } from '@models';
 import { Loading } from '@app/components/loading';
-import * as Actions from '@shared/actions';
 import { ReviewsList } from '../reviewsList';
 import { RatingComponent } from '@app/components/rating';
+import { RestroomGenderComponent} from './gender';
 
 type RoomDetailsProps = {
   match: {
@@ -40,11 +42,11 @@ class RoomDetails extends React.Component<
   }
 
   loadRoom = () => {
-    this.props.dispatch(Actions.startLoading());
+    this.props.startLoading();
     get<any>('/api/restrooms/' + this.props.match.params.id).then(room => {
-      this.props.dispatch(Actions.stopLoading());
+      this.props.stopLoading();
       this.setState((state, props) => {
-        props.dispatch(Actions.stopLoading());
+        props.stopLoading();
         return {
           room,
         };
@@ -59,7 +61,7 @@ class RoomDetails extends React.Component<
     ) {
       return;
     }
-    this.props.dispatch(Actions.startLoading());
+    this.props.startLoading();
     post<any>('/api/reviews/add', {
       review: {
         ...this.state.addRoomForm,
@@ -67,7 +69,7 @@ class RoomDetails extends React.Component<
       },
       recaptchaResponse: this.state.addRoomForm.recaptchaResponse,
     }).then(res => {
-      this.props.dispatch(Actions.stopLoading());
+      this.props.stopLoading();
       if (res.success) {
         this.setState({
           showForm: false,
@@ -82,10 +84,27 @@ class RoomDetails extends React.Component<
     return meanBy(this.state.room.reviews, 'rating');
   };
 
+  handleDeleteClick(review) {
+    if (confirm('Delete this review?')) {
+      this.props.startLoading();
+      deleteReview(review.id).then((res) => {
+        this.props.stopLoading();
+        this.setState(prevState => ({
+          room: {
+            ...prevState.room,
+            reviews: prevState.room.reviews.filter(r => r.id !== review.id),
+          }
+        }))
+      })
+      .catch(err => this.props.stopLoading());
+    }
+  }
+
   render() {
     return this.props.loading || !this.state.room ? null : (
       <section>
         <h2>{this.state.room.description}</h2>
+        <RestroomGenderComponent gender={this.state.room.restroomGender} />
         <h3>Average Rating: {this.calcRating() || '--'} / 10</h3>
         <p>{this.state.room.location}</p>
         <p>
@@ -125,6 +144,9 @@ class RoomDetails extends React.Component<
             this.setState({
               showForm: true,
             });
+          }}
+          handleDeleteClick={(review) => {
+            this.handleDeleteClick(review);
           }}
           reviews={sortBy(this.state.room.reviews, 'createDate').reverse()}
         />
@@ -209,6 +231,11 @@ const mapStateToProps = (state, ownProps) => ({
   loading: state.loading,
 });
 
-const cRoomDetails = connect(mapStateToProps)(RoomDetails);
+const mapDispatchToProps = {
+  startLoading,
+  stopLoading
+}
+
+const cRoomDetails = connect(mapStateToProps, mapDispatchToProps)(RoomDetails);
 
 export { cRoomDetails as RoomDetails };

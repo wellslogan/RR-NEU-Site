@@ -1,4 +1,4 @@
-const handleResponse = response => {
+const checkUnauthorized = response => {
   if (response.status === 401) {
     if (sessionStorage.getItem('jwtToken') != null) {
       // need to login again
@@ -8,6 +8,10 @@ const handleResponse = response => {
     window.location.href = '/login';
     return;
   }
+};
+
+const handleResponse = response => {
+  checkUnauthorized(response);
 
   if (!response.ok) {
     return response.json().then(err => Promise.reject(err));
@@ -39,6 +43,13 @@ export function post<T>(url, payload): Promise<T> {
   return fetch(process.env.API_URI + url, {
     method: 'POST',
     body: JSON.stringify(payload),
+    headers: getHeaders(),
+  }).then(handleResponse);
+}
+
+export function httpDelete<T>(url): Promise<T> {
+  return fetch(process.env.API_URI + url, {
+    method: 'DELETE',
     headers: getHeaders(),
   }).then(handleResponse);
 }

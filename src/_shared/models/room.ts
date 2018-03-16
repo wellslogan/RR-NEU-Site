@@ -1,4 +1,4 @@
-import { Review } from './review';
+import { Review, RestroomGender } from '@models';
 
 export type Room = {
   id: number;
@@ -9,4 +9,5 @@ export type Room = {
   createDate: string;
   reviews: Review[];
   averageRating?: number;
+  restroomGender?: RestroomGender;
 };

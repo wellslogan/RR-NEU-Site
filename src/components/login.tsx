@@ -23,15 +23,13 @@ const Login: React.StatelessComponent<any> = props => {
   const responseGoogle = googleUser => {
     const id_token = googleUser.getAuthResponse().id_token;
 
-    props.addSession({
-      name: googleUser.getBasicProfile().getName(),
-      token: id_token,
-    });
-
     sessionStorage.setItem('jwtToken', id_token);
 
-    get('/api/users/findOrCreate').then(res => {
-      console.log(res);
+    get('/api/users/findOrCreate').then((res: any) => {
+      props.addSession({
+        name: googleUser.getBasicProfile().getName(),
+        id: res.id,
+      });
     });
 
     props.history.push('/');

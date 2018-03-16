@@ -1,32 +1,54 @@
-@import '../_variables.scss';
 .reviews-list {
   border: 1px solid $blue;
   border-radius: 20px;
 
   .review {
     width: 100%;
-    display: grid;
-    grid-template-columns: 150px auto;
-    grid-gap: 10px;
+    display: flex;
+    flex-direction: column;
     padding: 20px;
     border-bottom: 1px solid lightgray;
+
+    @include tablet {
+      flex-direction: row;
+    }
 
     &:last-child {
       border-bottom: none;
     }
 
     .review-rating {
-      font-size: 108px;
+      font-size: 54px;
       font-weight: 700;
       align-self: center;
       justify-self: center;
       color: $purple;
+
+      @include tablet {
+        font-size: 108px;
+        padding: 0 40px 0 20px;
+      }
     }
 
     .review-content {
+      flex-grow: 1;
+
       h3,
       h4 {
         margin: 5px 0;
+      }
+
+      .review-title {
+        display: flex;
+
+        h3 {
+          justify-self: flex-start;
+          flex-grow: 1;
+        }
+
+        button {
+          justify-self: flex-end;
+        }
       }
     }
   }
