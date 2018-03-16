@@ -67,9 +67,12 @@
 .rating-component {
   .rating-option {
     font-size: 2.5em;
-    padding: 0 0.25em;
     margin-left: 0.25em;
     color: darkgray;
+
+    @include tablet {
+      padding: 0 0.25em;
+    }
 
     &.active {
       color: black;

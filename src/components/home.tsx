@@ -8,6 +8,7 @@ import { Room } from '@models';
 import { RoomList } from '@app/components/roomList';
 import { get } from '@shared/baseService';
 import * as Actions from '@shared/actions';
+import { precisionRound } from '@shared/utils';
 
 type HomeProps = {} & GeolocatedProps;
 
@@ -96,7 +97,7 @@ const RoomBox = ({ room, ...props }) => {
         {room.averageRating == null ? (
           <small>No reviews</small>
         ) : (
-          `${room.averageRating}/10 ${
+          `${precisionRound(room.averageRating, 1)}/10 ${
             room.reviews ? `(${room.reviews.length})` : ''
           }`
         )}

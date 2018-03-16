@@ -11,6 +11,7 @@ import { Loading } from '@app/components/loading';
 import { ReviewsList } from '../reviewsList';
 import { RatingComponent } from '@app/components/rating';
 import { RestroomGenderComponent} from './gender';
+import { precisionRound } from '@shared/utils';
 
 type RoomDetailsProps = {
   match: {
@@ -105,7 +106,7 @@ class RoomDetails extends React.Component<
       <section>
         <h2>{this.state.room.description}</h2>
         <RestroomGenderComponent gender={this.state.room.restroomGender} />
-        <h3>Average Rating: {this.calcRating() || '--'} / 10</h3>
+        <h3>Average Rating: {precisionRound(this.calcRating(), 1) || '--'} / 10</h3>
         <p>{this.state.room.location}</p>
         <p>
           <sup>Added on {this.formatDate(this.state.room.createDate)}</sup>
