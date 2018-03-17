@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { GoogleLogin } from 'react-google-login';
 import { withRouter } from 'react-router-dom';
 import { parse } from 'query-string';
+import Mailto from 'react-protected-mailto'
 
 import { addSession, clearSession } from '@app/_shared/actions';
 import { get } from '@app/_shared/baseService';
@@ -118,6 +119,12 @@ const Login: React.StatelessComponent<any> = props => {
         </span>
         <span className="google-button__text">Sign in with Google</span>
       </GoogleLogin>
+      <p>By logging in you agree that your restroom and review information may be used (anonymously) as part of data collection for the senior project of Logan Wells for IS4900 at Northeastern University. If you have any questions, please contact me directly at
+      {' '}<Mailto
+      email='wells.l@husky.neu.edu'
+      headers={
+        {subject:'Question about Husky Bathrooms'}
+      }/>.</p>
     </section>
   );
 };
