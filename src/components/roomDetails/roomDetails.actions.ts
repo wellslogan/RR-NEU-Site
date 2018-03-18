@@ -69,6 +69,7 @@ export const addReviewAsync = (review: SubmitReviewRequest) => (
       } else {
         dispatch(addRoomDetailsError('Something went wrong.'));
       }
+      return result;
     })
     .catch(err => {
       dispatch(addRoomDetailsError('Something went wrong.'));
