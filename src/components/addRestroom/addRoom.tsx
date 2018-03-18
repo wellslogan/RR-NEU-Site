@@ -1,29 +1,30 @@
 import * as React from 'react';
 import { GeolocatedProps } from 'react-geolocated';
 import * as _ from 'lodash';
-import { withRouter } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
+import ReCAPTCHA from 'react-google-recaptcha';
+import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import Icon from 'react-icons-kit';
 import { man } from 'react-icons-kit/icomoon/man';
 import { woman } from 'react-icons-kit/icomoon/woman';
 import { manWoman } from 'react-icons-kit/icomoon/manWoman';
 import { questionCircle } from 'react-icons-kit/fa/questionCircle';
 
-import { addRoom } from './room.service';
-import ReCAPTCHA from 'react-google-recaptcha';
-import PlacesAutocomplete from 'react-places-autocomplete';
-import { geocodeByAddress } from 'react-places-autocomplete';
-
-import { stopLoading, startLoading, addLocation } from '@shared/actions';
-import { RestroomGender } from '@models';
+import { Loading } from '@app/components';
+import { addLocation } from '@shared/globalRedux/global.actions';
+import { RestroomGender, AppState } from '@models';
+import { addRoomAsync, addAddRoomError } from './addRoom.actions';
+import { AddRoomRequest } from './addRoom.service';
 
 type AddRoomProps = {
-  startLoading: () => void;
-  stopLoading: () => void;
   addLocation: (location: any) => void;
-  history: any; // from react-router
+  addAddRoomError: (error: string) => any;
+  addRoomAsync: (addRoomReq: AddRoomRequest) => any;
   storedLocation: { formatted_address: string, latitude: string, longitude: string };
-} & GeolocatedProps;
+  error: string;
+  loading: boolean;
+} & GeolocatedProps & RouteComponentProps<{}>;
 
 type AddRoomState = {
   description?: string;
@@ -31,7 +32,6 @@ type AddRoomState = {
   longitude?: string;
   location?: string;
   recaptchaResponse?: string;
-  error?: string;
   useCurrentLocation?: boolean;
   restroomGender?: RestroomGender;
 };
@@ -42,10 +42,10 @@ class AddRoomWithoutRouter extends React.Component<
 > {
   constructor(props) {
     super(props);
-    this.props.stopLoading();
     this.state = {
       useCurrentLocation: false
     };
+    this.props.addAddRoomError('');
   }
 
   calculateAndUseLocation = event => {
@@ -103,44 +103,32 @@ class AddRoomWithoutRouter extends React.Component<
 
   handleSubmit = event => {
     event.preventDefault();
-    this.setState({ error: '' });
 
     if (!this.state.recaptchaResponse) {
-      return this.setState({
-        error: 'You must fill out the recaptcha form.',
-      });
+      this.props.addAddRoomError('You must fill out the recaptcha form.');
+      return;
     }
 
     if (!this.state.description || !this.state.location) {
-      return this.setState({
-        error: '* denotes required fields.',
-      });
+      this.props.addAddRoomError('* denotes required fields.');
+      return;
     }
 
-    const submitRoom = ({locationStr, lat, lng}) => {
-      this.props.startLoading();
-      addRoom({
+    const submitRoom = ({location, latitude, longitude}) => {
+      this.props.addRoomAsync({
         restroom: {
           description: this.state.description,
-          latitude: lat,
-          longitude: lng,
-          location: this.state.location,
-          restroomGender: this.state.restroomGender
+          restroomGender: this.state.restroomGender,
+          location,
+          latitude,
+          longitude
         },
-        recaptchaResponse: this.state.recaptchaResponse,
+        recaptchaResponse: this.state.recaptchaResponse
       })
-        .then(res => {
-          this.props.stopLoading();
-          if (res.success) {
-            this.props.history.push('/');
-            return;
+        .then(response => {
+          if (response.success) {
+            this.props.history.push('/')
           }
-          this.setState({
-            error: 'Something went wrong, please try again.',
-          });
-        })
-        .catch(err => {
-          this.props.stopLoading();
         });
     }
 
@@ -152,9 +140,9 @@ class AddRoomWithoutRouter extends React.Component<
         const loc = _.get(resultsArray, '[0].geometry.location');
         if (loc) {
           return submitRoom({
-            locationStr: this.state.location,
-            lat: loc.lat(),
-            lng: loc.lng(),
+            location: this.state.location,
+            latitude: loc.lat(),
+            longitude: loc.lng(),
           })
         }
       });
@@ -163,24 +151,17 @@ class AddRoomWithoutRouter extends React.Component<
     // we're using the current location, so we should have the address info in the store
     if (this.state.useCurrentLocation && this.props.storedLocation.formatted_address) {
       return submitRoom({
-        locationStr: this.props.storedLocation.formatted_address,
-        lat: this.props.storedLocation.latitude,
-        lng: this.props.storedLocation.longitude,
+        location: this.props.storedLocation.formatted_address,
+        latitude: this.props.storedLocation.latitude,
+        longitude: this.props.storedLocation.longitude,
       })
     }
   };
 
   setGender = (gender: RestroomGender) => {
-    this.setState(prevState => {
-      if (prevState.restroomGender === gender) {
-        return {
-          restroomGender: undefined
-        };
-      }
-      return {
-        restroomGender: gender
-      }
-    });
+    this.setState(prevState => ({
+        restroomGender: prevState.restroomGender === gender ? undefined : gender
+      }));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -193,10 +174,17 @@ class AddRoomWithoutRouter extends React.Component<
   }
 
   render() {
+    if (this.props.loading) {
+      return <Loading/>;
+    }
+
     return (
       <section>
         <h1>Add a new Restroom</h1>
         <form onSubmit={e => this.handleSubmit(e)}>
+        {this.props.error ? (
+          <div className="form-row"><span className="error">{this.props.error}</span></div>
+        ) : null}
           <div className="form-row">
             <label>Restroom Description*</label>
             <input
@@ -263,26 +251,22 @@ class AddRoomWithoutRouter extends React.Component<
             <button type="submit">Submit</button>
           </div>
         </form>
-        {this.state.error && this.state.error !== '' ? (
-          <span className="error">{this.state.error}</span>
-        ) : null}
       </section>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  storedLocation: state.location
+const mapStateToProps = (state: AppState) => ({
+  storedLocation: state.global.location,
+  ...state.addRoom
 });
 
 const mapDispatchToProps = {
-  startLoading,
-  stopLoading,
   addLocation,
+  addAddRoomError,
+  addRoomAsync,
 };
 
-const AddRoom = withRouter(
+export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(AddRoomWithoutRouter)
 );
-
-export { AddRoom };

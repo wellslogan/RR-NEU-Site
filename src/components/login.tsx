@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { parse } from 'query-string';
 import Mailto from 'react-protected-mailto'
 
-import { addSession, clearSession } from '@app/_shared/actions';
+import { addSession, clearSession } from '@shared/globalRedux/global.actions';
 import { get } from '@app/_shared/baseService';
 
 const Login: React.StatelessComponent<any> = props => {

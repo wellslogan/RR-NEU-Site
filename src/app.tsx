@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import {
   SiteNav,
-  Home,
+  Homepage,
   Location,
   RoomDetails,
   AddRoom,
@@ -13,8 +13,9 @@ import {
   SearchResults,
   Login,
   Profile,
+  Footer,
 } from '@app/components';
-import { createAndPersistStore } from '@app/_shared/configureStore';
+import { createAndPersistStore } from './configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
 
 const { store, persistor } = createAndPersistStore();
@@ -23,51 +24,25 @@ const App = props => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <>
-          <Loading />
-          <div className="container">
-            <SiteNav />
-            <Route
-              path="/"
-              exact
-              render={routeProps => <Home {...props} {...routeProps} />}
-            />
-            <Route path="/room" exact />
-            <Route path="/room/:id" component={RoomDetails} />
-            <Route
-              path="/add"
-              exact
-              render={routeProps => <AddRoom {...props} {...routeProps} />}
-            />
-            <Route path="/search" component={SearchResults} />
-            <Route path="/login" component={Login} />
-            <Route path="/profile" component={Profile} />
-            <footer>
-              Developed in 2018 by Logan Wells.{' '}
-              <a
-                href="https://github.com/wellslogan/rr-neu-site"
-                target="_blank"
-              >
-                Source code on Github
-              </a>. Favicon courtesy of{' '}
-              <a
-                href="https://www.emojione.com/"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                EmojiOne
-              </a>{' '}
-              via{' '}
-              <a
-                href="https://emojitwo.github.io/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                EmojiTwo
-              </a>.
-            </footer>
-          </div>
-        </>
+        <div className="container">
+          <SiteNav />
+          <Route
+            path="/"
+            exact
+            render={routeProps => <Homepage {...props} {...routeProps} />}
+          />
+          <Route path="/room" exact />
+          <Route path="/room/:id" component={RoomDetails} />
+          <Route
+            path="/add"
+            exact
+            render={routeProps => <AddRoom {...props} {...routeProps} />}
+          />
+          <Route path="/search" component={SearchResults} />
+          <Route path="/login" component={Login} />
+          <Route path="/profile" component={Profile} />
+          <Footer />
+        </div>
       </BrowserRouter>
     </PersistGate>
   </Provider>

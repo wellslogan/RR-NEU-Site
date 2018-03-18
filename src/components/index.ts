@@ -1,10 +1,10 @@
-export { AddRoom } from './restrooms/addRoom';
-export { RoomDetails } from './restrooms/roomDetails';
-export { Home } from './home';
+export { RoomDetails } from './roomDetails';
 export { Loading } from './loading';
 export { Location } from './location';
+export { Footer } from './footer';
+export { default as Homepage } from './homepage/homepage';
+export { default as AddRoom } from './addRestroom/addRoom';
 export { default as Login } from './login';
-export { SiteNav } from './nav';
-export { Profile } from './profile';
-export { ReviewsList } from './reviewsList';
-export { SearchResults } from './searchResults';
+export { default as SiteNav } from './nav';
+export { default as Profile } from './profile/profile';
+export { default as SearchResults } from './search/searchResults';

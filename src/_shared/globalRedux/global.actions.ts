@@ -1,7 +1,6 @@
 import { Session } from '@app/_shared/models/session';
-import { addRoom } from '@app/components/restrooms/room.service';
 
-export const ActionTypes = {
+export const GlobalActionTypes = {
   START_LOADING: 'START_LOADING',
   STOP_LOADING: 'STOP_LOADING',
   ADD_LOCATION: 'ADD_LOCATION',
@@ -12,11 +11,11 @@ export const ActionTypes = {
 };
 
 export const startLoading = () => ({
-  type: ActionTypes.START_LOADING,
+  type: GlobalActionTypes.START_LOADING,
 });
 
 export const stopLoading = () => ({
-  type: ActionTypes.STOP_LOADING,
+  type: GlobalActionTypes.STOP_LOADING,
 });
 
 export const addLocation = (location: {
@@ -24,25 +23,25 @@ export const addLocation = (location: {
   latitude;
   longitude;
 }) => ({
-  type: ActionTypes.ADD_LOCATION,
+  type: GlobalActionTypes.ADD_LOCATION,
   location: location,
 });
 
 export const addLocationEnabled = (enabled: boolean) => ({
-  type: ActionTypes.ADD_LOCATION_ENABLED,
+  type: GlobalActionTypes.ADD_LOCATION_ENABLED,
   enabled,
 });
 
 export const addSearchQuery = (query: string) => ({
-  type: ActionTypes.ADD_SEARCH_QUERY,
+  type: GlobalActionTypes.ADD_SEARCH_QUERY,
   query,
 });
 
 export const addSession = (session: Session) => ({
-  type: ActionTypes.ADD_SESSION,
+  type: GlobalActionTypes.ADD_SESSION,
   session,
 });
 
 export const clearSession = () => ({
-  type: ActionTypes.CLEAR_SESSION,
+  type: GlobalActionTypes.CLEAR_SESSION,
 });

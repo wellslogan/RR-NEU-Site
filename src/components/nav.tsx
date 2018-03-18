@@ -7,7 +7,8 @@ import Icon from 'react-icons-kit';
 import { navicon } from 'react-icons-kit/fa/navicon';
 import { close as closeIcon } from 'react-icons-kit/fa/close';
 
-import { addSearchQuery } from '@shared/actions';
+import { addSearchQuery } from '@shared/globalRedux/global.actions';
+import { AppState } from '@models';
 
 class SiteNav extends React.Component<any, any> {
   constructor(props) {
@@ -43,7 +44,7 @@ class SiteNav extends React.Component<any, any> {
           <form
             onSubmit={e => {
               e.preventDefault();
-              if (this.state.query && this.state.query !== '') {
+              if (this.state.query && this.state.query.trim()) {
                 this.props.dispatch(addSearchQuery(this.state.query));
                 this.props.history.push('/search');
               }
@@ -127,13 +128,11 @@ class SiteNav extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: AppState, ownProps) => {
   return {
-    query: state.query,
-    session: state.session,
+    query: state.global.query,
+    session: state.global.session,
   };
 };
 
-const wrSiteNav = withRouter(connect(mapStateToProps)(SiteNav));
-
-export { wrSiteNav as SiteNav };
+export default withRouter(connect(mapStateToProps)(SiteNav));

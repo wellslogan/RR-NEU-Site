@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as moment from 'moment';
 import Icon from 'react-icons-kit';
 import { remove as removeIcon } from 'react-icons-kit/fa/remove';
+import { AppState } from '@models';
 
 const ReviewsList = ({
   reviews,
@@ -12,7 +13,7 @@ const ReviewsList = ({
 }) => {
   const getAuthorName = review => {
     if (review.author !== null && review.authorIsAnonymous) {
-      return `${review.author.name} (as Anonymous)`;
+      return `${review.author.name} (Anonymous to others)`;
     } else if (review.authorIsAnonymous || !review.author) {
       return 'Anonymous';
     } else {
@@ -61,8 +62,8 @@ const ReviewsList = ({
   );
 };
 
-const mapStateToProps = state => ({
-  session: state.session,
+const mapStateToProps = (state: AppState) => ({
+  session: state.global.session,
 });
 
 const connected = connect(mapStateToProps)(ReviewsList);

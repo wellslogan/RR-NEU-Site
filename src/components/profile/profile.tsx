@@ -2,55 +2,52 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 import { get } from '@app/_shared/baseService';
-import { startLoading, stopLoading } from '@app/_shared/actions';
-import { ReviewsList } from '@app/components';
+import { startLoading, stopLoading } from '@shared/globalRedux/global.actions';
+import { ReviewsList } from '../roomDetails/reviewsList';
 import { Link } from 'react-router-dom';
+import { AppState, Review } from '@models';
+import { fetchProfileReviews } from '@app/components/profile/profile.actions';
+import { Loading } from '@app/components';
 
-class Profile extends React.Component<any, any> {
+type ProfileProps = {
+  fetchProfileReviews: () => any;
+  profileReviews?: Review[];
+  profileLoading: boolean;
+  profileError: string;
+  session?: any;
+};
+
+class Profile extends React.Component<ProfileProps, any> {
   constructor(props) {
     super(props);
-
-    this.state = {};
 
     if (!props.session) {
       props.history.push('/login');
     }
 
-    this.getCurrentUserReviewsAsync();
+    this.props.fetchProfileReviews();
   }
 
-  getCurrentUserReviewsAsync = () => {
-    this.props.dispatch(startLoading());
-    get('/api/users/getCurrentUserReviews')
-      .then(res => {
-        this.props.dispatch(stopLoading());
-        this.setState({
-          reviews: res,
-        });
-      })
-      .catch(err => {
-        this.props.dispatch(stopLoading());
-      });
-  };
-
   render() {
-    get('/api/users/getCurrentUserReviews').then(res => {});
+    if (this.props.profileLoading) {
+      return <Loading />;
+    }
 
     return (
       <section>
         <h1>Hello {this.props.session.name}!</h1>
-        {!(this.state.reviews && this.state.reviews.length) ? (
+        {!(this.props.profileReviews && this.props.profileReviews.length) ? (
           <p>You haven't left any reviews yet.</p>
         ) : (
           <>
             <h2>Reviews You've Left:</h2>
             <div className="reviews-list">
-              {this.state.reviews.map((r, idx) => (
+              {this.props.profileReviews.map((r, idx) => (
                 <div key={idx} className="review">
                   <div className="review-rating">{r.rating}</div>
                   <div className="review-content">
                     <h3>
-                      <Link to={'/room/' + r.restroom.id}>{r.title}</Link>
+                      <Link to={`/room/${r.restroom.id}`}>{r.title}</Link>
                     </h3>
                     <p>
                       Posted{' '}
@@ -70,10 +67,13 @@ class Profile extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
-  session: state.session,
+const mapStateToProps = (state: AppState) => ({
+  session: state.global.session,
+  ...state.profile,
 });
 
-const connected = connect(mapStateToProps)(Profile);
+const mapDispatchToProps = {
+  fetchProfileReviews,
+};
 
-export { connected as Profile };
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
