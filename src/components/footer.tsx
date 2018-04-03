@@ -20,6 +20,9 @@ export const Footer: React.StatelessComponent = () => (
       rel="noopener noreferrer"
     >
       EmojiTwo
+    </a>.{' '}
+    <a href="https://goo.gl/forms/74LD7uE0SSqJAJap2" target="_blank">
+      Leave feedback
     </a>.
   </footer>
 );
