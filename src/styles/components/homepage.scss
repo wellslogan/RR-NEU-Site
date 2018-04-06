@@ -33,8 +33,9 @@
         &.description {
           align-self: flex-start;
           flex-grow: 1;
-          line-height: 1;
           font-weight: 700;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         &.averageRating {
